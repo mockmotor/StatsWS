@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Stats" default="dist" basedir=".">
+  <property name="src" location="src"/>
+  <property name="web.dir" location="WebContent"/>
+  <property name="build" location="bin"/>
+  <property name="dist"  location="dist"/>
+  <property name="lib" location="lib"/>
+  <property name="war.file" location="dist/Stats.war"/>
+
+    <path id="classpath">
+      <fileset dir="lib" includes="**/*.jar" />
+    </path>
+
+  <target name="init">
+    	<mkdir dir="${build}"/>
+	<mkdir dir="${build}/war"/>
+	<mkdir dir="${build}/classes"/>
+  </target>
+
+  <target name="dist" depends="init">
+	<mkdir dir="${dist}"/>
+
+    	<javac srcdir="${src}" destdir="${build}/classes" classpathref="classpath" target="1.6" source="1.6" debug="true"/>
+
+    	<unzip dest="${build}/classes">
+        	<fileset dir="${lib}">
+			<include name="commons-pool2-2.4.2.jar" />
+		</fileset>    
+	</unzip>
+
+	<copy todir="${build}/war">
+          <fileset dir="${web.dir}"/>
+	</copy>
+
+	<copy todir="${build}/war/WEB-INF/classes">
+          <fileset dir="${build}/classes"/>
+	</copy>
+
+        <war destfile="${war.file}" 
+             webxml="${web.dir}/WEB-INF/web.xml" 
+             basedir="${build}/war">
+        </war>
+
+  </target>
+
+  <target name="clean"
+        description="clean up" >
+    <delete dir="${build}"/>
+    <delete dir="${dist}"/>
+  </target>
+</project>
